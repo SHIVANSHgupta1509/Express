@@ -20,12 +20,6 @@ userRouter
 .route('/:id')
 .get(getUserById)
 
-// let users=[
-//     {'Name':"SG"},
-//     {"Name":"GenZ"}
-// ]
-
-
 async function getUsers(req,res){
     let allUsers=await userModel.find();
     res.json({message:'list of users',

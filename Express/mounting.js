@@ -9,6 +9,9 @@ app.use(express.json());//global middleware
 const userRouter=express.Router();
 app.use('/user',userRouter);//global middleware
 
+const authRouter=express.Router();
+app.use('/auth',authRouter);
+
 userRouter
 .route('/')
 .get(middleware1,getUsers,middleware2)//path specific middleware
@@ -20,10 +23,16 @@ userRouter
 .route('/:id')
 .get(getUserById)
 
-// let users=[
-//     {'Name':"SG"},
-//     {"Name":"GenZ"}
-// ]
+authRouter
+.route('/signUp')
+.get(getSignUp)
+.post(postSignUp)
+
+
+let users=[
+    {'Name':"SG"},
+    {"Name":"GenZ"}
+]
 
 
 function getUsers(req,res,next){
@@ -76,50 +85,15 @@ function getUserById(req,res){
     res.send("params are recieved successfully");
 }
 
-const db_link='mongodb+srv://admin:9OOojmuVSiL8c0lp@cluster0.keenr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+function getSignUp(req,res){
+    console.log("in Get SignUp");
+    res.sendFile("/Users/shivanshgupta/Desktop/BK/Express/public/index.html");
+}
 
-mongoose.connect(db_link)
-.then(function(db){
-    // console.log(db);
-    console.log('db connected');
-})
-.catch(function(err){
-    // console.log(err);
-    console.log('err')
-})
-
-const userSchema=mongoose.Schema({
-    name:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    password:{
-        type:String,
-        required:true,
-        minLength:8
-    },
-    confirmPassword:{
-        type:String,
-        required:true,
-        minLength:8
-    }
-})
-
-const userModel=mongoose.model('userModel', userSchema);
-
-(async function createUser(){
-    let user={
-        name:'KG',
-        email:"kg@gmail.com",
-        password:"12345678",
-        confirmPassword:"12345678"
-    }
-
-    let userData=await userModel.create(user);
-    console.log(userData);
-})()
+function postSignUp(req,res){
+    let dataObj=req.body;
+    console.log(dataObj);
+    res.json({
+        'message':"user added"
+    })
+}
